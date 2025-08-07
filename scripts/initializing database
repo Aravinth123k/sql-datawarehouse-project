@@ -1,0 +1,23 @@
+use master
+
+--Drop database if exists
+if exists(select 1 from sys.databases where name='DataWarehouse')
+begin
+drop database DataWarehouse;
+end;
+go
+
+--create database DataWarehouse
+create database DataWarehouse;
+go
+
+use DataWarehouse
+
+--Creating data Schemas
+go
+create schema bronze;
+go
+create schema silver;
+go
+create schema gold;
+
