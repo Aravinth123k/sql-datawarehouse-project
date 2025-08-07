@@ -1,0 +1,95 @@
+--loading datas to bronze.crm_cust_info
+
+if (select top 1 1 from bronze.crm_cust_info) is not null
+begin 
+truncate table bronze.crm_cust_info;
+end;
+go
+
+bulk insert bronze.crm_cust_info from
+'C:\Users\aravi\OneDrive\Desktop\SQL\DWH project\sql-data-warehouse-project\sql-data-warehouse-project\datasets\source_crm\cust_info.csv'
+with (
+FIRSTROW=2,
+FIELDTERMINATOR=',',
+TABLOCK
+);
+
+--loading datas to bronze.crm_prd_info
+
+if (select top 1 1 from bronze.crm_prd_info) is not null
+begin 
+truncate table bronze.crm_prd_info;
+end;
+go
+
+bulk insert bronze.crm_prd_info from
+'C:\Users\aravi\OneDrive\Desktop\SQL\DWH project\sql-data-warehouse-project\sql-data-warehouse-project\datasets\source_crm\prd_info.csv'
+with (
+FIRSTROW=2,
+FIELDTERMINATOR=',',
+TABLOCK
+);
+
+--loading datas to bronze.crm_sales_details
+
+if (select top 1 1 from bronze.crm_sales_details) is not null
+begin 
+truncate table bronze.crm_sales_details;
+end;
+go
+
+bulk insert bronze.crm_sales_details from
+'C:\Users\aravi\OneDrive\Desktop\SQL\DWH project\sql-data-warehouse-project\sql-data-warehouse-project\datasets\source_crm\sales_details.csv'
+with (
+FIRSTROW=2,
+FIELDTERMINATOR=',',
+TABLOCK
+);
+
+--loading datas to bronze.erp_cust_az12
+
+if (select top 1 1 from bronze.erp_cust_az12) is not null
+begin 
+truncate table bronze.erp_cust_az12;
+end;
+go
+
+bulk insert bronze.erp_cust_az12 from
+'C:\Users\aravi\OneDrive\Desktop\SQL\DWH project\sql-data-warehouse-project\sql-data-warehouse-project\datasets\source_erp\CUST_AZ12.csv'
+with (
+FIRSTROW=2,
+FIELDTERMINATOR=',',
+TABLOCK
+);
+
+--loading datas to bronze.erp_loc_a101
+
+if (select top 1 1 from bronze.erp_loc_a101) is not null
+begin 
+truncate table bronze.erp_loc_a101;
+end;
+go
+
+bulk insert bronze.erp_loc_a101 from
+'C:\Users\aravi\OneDrive\Desktop\SQL\DWH project\sql-data-warehouse-project\sql-data-warehouse-project\datasets\source_erp\LOC_A101.csv'
+with (
+FIRSTROW=2,
+FIELDTERMINATOR=',',
+TABLOCK
+);
+
+--loading datas to bronze.erp_px_cat_g1v2
+
+if (select top 1 1 from bronze.erp_px_cat_g1v2) is not null
+begin 
+truncate table bronze.erp_px_cat_g1v2;
+end;
+go
+
+bulk insert bronze.erp_px_cat_g1v2 from
+'C:\Users\aravi\OneDrive\Desktop\SQL\DWH project\sql-data-warehouse-project\sql-data-warehouse-project\datasets\source_erp\PX_CAT_G1V2.csv'
+with (
+FIRSTROW=2,
+FIELDTERMINATOR=',',
+TABLOCK
+);
