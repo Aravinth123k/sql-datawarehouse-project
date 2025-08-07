@@ -66,26 +66,26 @@ cntry varchar(50));
 
 --DDL for cust_az12
 
-if exists(select 1 from sys.tables where name='cust_az12')
+if exists(select 1 from sys.tables where name='erp_cust_az12')
 begin 
-drop table bronze.cust_az12;
+drop table bronze.erp_cust_az12;
 end 
 go
 
-create table bronze.cust_az12(
+create table bronze.erp_cust_az12(
 cid varchar(50),
 bdate datetime,
 gen varchar(50));
 
 --DDL for px_cat_g1v2
 
-if exists(select 1 from sys.tables where name='px_cat_g1v2')
+if exists(select 1 from sys.tables where name='erp_px_cat_g1v2')
 begin 
-drop table bronze.px_cat_g1v2;
+drop table bronze.erp_px_cat_g1v2;
 end 
 go
 
-create table bronze.px_cat_g1v2(
+create table bronze.erp_px_cat_g1v2(
 id varchar(50),
 cat varchar(50),
 subcat varchar(50),
