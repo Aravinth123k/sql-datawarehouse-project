@@ -1,99 +1,99 @@
-create or alter procedure bronze.load_bronze as
-begin
---loading datas to bronze.crm_cust_info
+use DataWarehouse;
+--DDL for crm_cust_info
 
-if (select top 1 1 from bronze.crm_cust_info) is not null
+if exists(select 1 from sys.tables where name='crm_cust_info')
 begin 
-truncate table bronze.crm_cust_info;
-end
+drop table silver.crm_cust_info;
+end 
+go 
 
-
-bulk insert bronze.crm_cust_info from
-'C:\Users\aravi\OneDrive\Desktop\SQL\DWH project\sql-data-warehouse-project\sql-data-warehouse-project\datasets\source_crm\cust_info.csv'
-with (
-FIRSTROW=2,
-FIELDTERMINATOR=',',
-TABLOCK
+create table silver.crm_cust_info(
+cst_id int,
+cst_key varchar(50),
+cst_firstname varchar(50),
+cst_lastname varchar(50),
+cst_matital_status varchar(50),
+cst_gender varchar(50),
+cst_create_date date,
+dwh_create_time datetime default getdate()
 );
 
---loading datas to bronze.crm_prd_info
+--DDL for crm_prd_info
 
-if (select top 1 1 from bronze.crm_prd_info) is not null
+if exists(select 1 from sys.tables where name='crm_prd_info')
 begin 
-truncate table bronze.crm_prd_info;
-end
+drop table silver.crm_prd_info;
+end 
+go 
 
+create table silver.crm_prd_info(
+prd_id int,
+prd_key varchar(50),
+prd_nm varchar(50),
+prd_cost int,
+prd_line varchar(50),
+prd_start_dt datetime,
+prd_end_dt datetime,
+dwh_create_time datetime default getdate());
 
-bulk insert bronze.crm_prd_info from
-'C:\Users\aravi\OneDrive\Desktop\SQL\DWH project\sql-data-warehouse-project\sql-data-warehouse-project\datasets\source_crm\prd_info.csv'
-with (
-FIRSTROW=2,
-FIELDTERMINATOR=',',
-TABLOCK
-);
+--DDL for crm_sales_details
 
---loading datas to bronze.crm_sales_details
-
-if (select top 1 1 from bronze.crm_sales_details) is not null
+if exists(select 1 from sys.tables where name='crm_sales_details')
 begin 
-truncate table bronze.crm_sales_details;
-end
+drop table silver.crm_sales_details;
+end 
+go 
 
+create table silver.crm_sales_details(
+sls_ord_num varchar(50),
+sls_prd_key varchar(50),
+sls_cust_id int,
+sls_order_dt int,
+sls_ship_dt int,
+sls_due_dt int,
+sls_sales int,
+sls_quantity int,
+sls_price int,
+dwh_create_time datetime default getdate());
 
-bulk insert bronze.crm_sales_details from
-'C:\Users\aravi\OneDrive\Desktop\SQL\DWH project\sql-data-warehouse-project\sql-data-warehouse-project\datasets\source_crm\sales_details.csv'
-with (
-FIRSTROW=2,
-FIELDTERMINATOR=',',
-TABLOCK
-);
+--DDL for erp_loc_a101
 
---loading datas to bronze.erp_cust_az12
-
-if (select top 1 1 from bronze.erp_cust_az12) is not null
+if exists(select 1 from sys.tables where name='erp_loc_a101')
 begin 
-truncate table bronze.erp_cust_az12;
-end
+drop table silver.erp_loc_a101;
+end 
+go 
 
+create table silver.erp_loc_a101(
+cid varchar(50),
+cntry varchar(50),
+dwh_create_time datetime default getdate());
 
-bulk insert bronze.erp_cust_az12 from
-'C:\Users\aravi\OneDrive\Desktop\SQL\DWH project\sql-data-warehouse-project\sql-data-warehouse-project\datasets\source_erp\CUST_AZ12.csv'
-with (
-FIRSTROW=2,
-FIELDTERMINATOR=',',
-TABLOCK
-);
+--DDL for cust_az12
 
---loading datas to bronze.erp_loc_a101
-
-if (select top 1 1 from bronze.erp_loc_a101) is not null
+if exists(select 1 from sys.tables where name='erp_cust_az12')
 begin 
-truncate table bronze.erp_loc_a101;
-end
+drop table silver.erp_cust_az12;
+end 
+go
 
+create table silver.erp_cust_az12(
+cid varchar(50),
+bdate datetime,
+gen varchar(50),
+dwh_create_time datetime default getdate());
 
-bulk insert bronze.erp_loc_a101 from
-'C:\Users\aravi\OneDrive\Desktop\SQL\DWH project\sql-data-warehouse-project\sql-data-warehouse-project\datasets\source_erp\LOC_A101.csv'
-with (
-FIRSTROW=2,
-FIELDTERMINATOR=',',
-TABLOCK
-);
+--DDL for px_cat_g1v2
 
---loading datas to bronze.erp_px_cat_g1v2
-
-if (select top 1 1 from bronze.erp_px_cat_g1v2) is not null
+if exists(select 1 from sys.tables where name='erp_px_cat_g1v2')
 begin 
-truncate table bronze.erp_px_cat_g1v2;
-end
+drop table silver.erp_px_cat_g1v2;
+end 
+go
 
-
-bulk insert bronze.erp_px_cat_g1v2 from
-'C:\Users\aravi\OneDrive\Desktop\SQL\DWH project\sql-data-warehouse-project\sql-data-warehouse-project\datasets\source_erp\PX_CAT_G1V2.csv'
-with (
-FIRSTROW=2,
-FIELDTERMINATOR=',',
-TABLOCK
-);
-
-end
+create table silver.erp_px_cat_g1v2(
+id varchar(50),
+cat varchar(50),
+subcat varchar(50),
+maintenance varchar(50),
+dwh_create_time datetime default getdate());
