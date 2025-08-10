@@ -1,0 +1,165 @@
+use DataWarehouse;
+
+-----------------------------------------------------------------------
+
+--check for nulls and duplicates in primary key
+
+-----Table:crm_cust_info-----
+
+select cst_id,count(*) from bronze.crm_cust_info
+group by cst_id having count(*)>1 or cst_id is null;
+
+-----Table:crm_prd_info-----
+
+select prd_id,count(*) from bronze.crm_prd_info
+group by prd_id having count(*)>1 or prd_id is null;
+
+-----Table:crm_sales_details-----
+
+select sls_cust_id,count(*) from bronze.crm_sales_details
+group by sls_cust_id having count(*)>1 or sls_cust_id is null;
+
+-----Table:erp_cust_az12------
+
+select cid,count(*) from bronze.erp_cust_az12
+group by cid having count(*)>1 or cid is null;
+
+-----Table:erp_loc_a101-----
+
+select cid,count(*) from bronze.erp_loc_a101
+group by cid having count(*)>1 or cid is null;
+
+-----Table:erp_px_cat_g1v2-----
+
+select id,count(*) from bronze.erp_px_cat_g1v2
+group by id having count(*)>1;
+
+-----------------------------------------------------------------------
+
+--check for unwanted spaces
+
+-----Table:crm_cust_info-----
+
+select * from bronze.crm_cust_info
+where trim(cst_firstname)!=cst_firstname;
+
+select * from bronze.crm_cust_info
+where trim(cst_lastname)!=cst_lastname;
+
+select * from bronze.crm_cust_info
+where trim(cst_matital_status)!=cst_matital_status;
+
+select * from bronze.crm_cust_info
+where trim(cst_gender)!=cst_gender;
+
+-----Table:crm_prd_info-----
+
+select * from bronze.crm_prd_info 
+where trim(prd_key)!=prd_key;
+
+select * from bronze.crm_prd_info 
+where trim(prd_nm)!=prd_nm;
+
+select * from bronze.crm_prd_info 
+where trim(prd_line)!=prd_line;
+
+-----Table:crm_sales_details-----
+
+select * from bronze.crm_sales_details 
+where trim(sls_ord_num)!=sls_ord_num;
+
+select * from bronze.crm_sales_details 
+where trim(sls_prd_key)!=sls_prd_key;
+
+-----Table:erp_cust_az12-----
+
+select * from bronze.erp_cust_az12
+where trim(cid) !=cid;
+
+select * from bronze.erp_cust_az12
+where trim(gen) !=gen;
+
+-----Table:erp_px_cat_g1v2-----
+
+select * from bronze.erp_px_cat_g1v2 
+where trim(id)!= id;
+
+select * from bronze.erp_px_cat_g1v2 
+where trim(cat)!= cat;
+
+select * from bronze.erp_px_cat_g1v2 
+where trim(subcat)!= subcat;
+
+select * from bronze.erp_px_cat_g1v2 
+where trim(maintenance)!= maintenance;
+
+
+-----------------------------------------------------------------------
+
+
+
+--check data standardization & consistency
+
+-----Table:crm_cust_info-----
+
+select distinct 
+cst_matital_status
+from bronze.crm_cust_info;
+
+-----Table:crm_prd_info-----
+
+select distinct prd_line 
+from bronze.crm_prd_info;
+
+-----Table:erp_cust_az12-----
+
+select distinct gen 
+from bronze.erp_cust_az12;
+
+-----Table:erp_loc_a101-----
+
+select distinct cntry
+from bronze.erp_loc_a101;
+
+-----Table:erp_px_cat_g1v2-----
+
+select distinct maintenance 
+from bronze.erp_px_cat_g1v2;
+
+-----------------------------------------------------------------------
+
+--check dates quality
+
+-----Table:crm_sales_details-----
+
+select sls_ord_num,sls_order_dt,sls_ship_dt from bronze.crm_sales_details 
+where sls_order_dt>sls_ship_dt;
+
+select sls_ord_num,sls_order_dt,sls_due_dt from bronze.crm_sales_details 
+where sls_order_dt>sls_due_dt;
+
+-----Table:erp_cust_az12-----
+
+select bdate from bronze.erp_cust_az12
+where year(bdate)<1950 order by bdate;
+
+-----------------------------------------------------------------------
+
+--check for negative,null,zero in sales
+
+-----Table:crm_sales_details-----
+
+select * from bronze.crm_sales_details where
+sls_sales<0 or sls_sales =0 or sls_sales is null;
+
+select * from bronze.crm_sales_details where
+sls_sales!= sls_price*sls_quantity;
+
+select * from bronze.crm_sales_details where
+sls_quantity<0 or sls_quantity is null;
+
+select * from bronze.crm_sales_details where
+sls_price<=0 or sls_price is null;
+
+
+
