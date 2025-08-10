@@ -1,0 +1,79 @@
+--create dimension:gold.dm_customers 
+
+if OBJECT_ID('gold.dim_customers','V') is not null
+begin  
+drop view gold.dim_customers ;
+end
+go
+
+create or alter view gold.dim_customers as
+select 
+ROW_NUMBER() over(order by cst_id) as customer_key,
+ci.cst_id customer_id,
+ci.cst_key customer_number,
+ci.cst_firstname first_name,
+ci.cst_lastname last_name,
+cl.cntry country,
+ci.cst_matital_status marital_status,
+case when ci.cst_gender!='NA' then ci.cst_gender
+	 else isnull(cz.gen,'NA')
+end gender,
+cz.bdate birthdate,
+ci.cst_create_date create_date
+
+from silver.crm_cust_info as ci
+left join silver.erp_cust_az12 as cz on ci.cst_key=cz.cid
+left join silver.erp_loc_a101 as cl on ci.cst_key=cl.cid;
+
+--create dimension:gold.dim_products
+
+if OBJECT_ID('gold.dim_products','V') is not null
+begin  
+drop view gold.dim_products;
+end
+go
+
+create view gold.dim_products as
+select
+ROW_NUMBER() over(order by pn.prd_start_dt,pn.prd_key) as product_key,
+pn.prd_id  product_id,
+pn.prd_key product_number,
+pn.prd_nm product_name,
+pn.cat_id category_id,
+pc.cat category_name,
+pc.subcat sub_category_name,
+pc.maintenance maintenance_status,
+pn.prd_cost product_cost,
+pn.prd_line product_line,
+pn.prd_start_dt product_start_date
+from silver.crm_prd_info as pn
+left join silver.erp_px_cat_g1v2 as pc on pn.cat_id=pc.id
+where pn.prd_end_dt  is null --current data only
+;
+
+--create fact:gold.fact_sales
+
+if OBJECT_ID('gold.fact_sales','V') is not null
+begin  
+drop view gold.fact_sales;
+end
+go
+
+create view gold.fact_sales as
+select 
+sd.sls_ord_num order_number,
+pr.product_key,
+cu.customer_key,
+sd.sls_order_dt order_date,
+sd.sls_ship_dt shipping_date,
+sd.sls_due_dt due_date,
+sd.sls_sales sales_amount,
+sd.sls_quantity quantity,
+sd.sls_price price
+from silver.crm_sales_details as sd
+left join gold.dim_products as pr on sd.sls_prd_key=pr.product_number
+left join gold.dim_customers as cu on sd.sls_cust_id=cu.customer_id;
+
+
+
+
